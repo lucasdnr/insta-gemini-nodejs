@@ -4,13 +4,23 @@ import connectToDatabase from "../config/dbConfig.js";
 const connection = await connectToDatabase(process.env.CONNECTION_STRING);
 
 // Get all posts from the database
-export default async function getAllPosts() {
+export async function getAllPosts() {
   const db = connection.db("insta-gemini");
   const collection = db.collection("posts");
   return collection.find().toArray(); // Fetch all documents from the collection
 }
 
 // Get a post by ID
-// function getPostById(id) {
-//   return posts.findIndex((post) => post.id === Number(id));
-// }
+export async function getOnePost(id) {
+    const db = connection.db("insta-gemini");
+    const collection = db.collection("posts");
+    const query = { _id: id };
+    return collection.findOne(query);
+}
+
+// Create a new post in the database
+export async function createPost(post) {
+  const db = connection.db("insta-gemini");
+  const collection = db.collection("posts");
+  return collection.insertOne(post);
+}
