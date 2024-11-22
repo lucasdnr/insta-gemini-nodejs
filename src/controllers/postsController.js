@@ -21,6 +21,17 @@ export async function newPost(req, res) {
   }
 }
 
+export async function imageUpload(req, res) {
+  const post = req.body;
+  try {
+    const newPost = await createPost(post);
+    res.status(200).json(newPost);
+  } catch (error) {
+    console.error(error.message);
+    res.status(404).send("Error");
+  }
+}
+
 export async function getPostById(req, res) {
   const id = req.params.id;
   try {
