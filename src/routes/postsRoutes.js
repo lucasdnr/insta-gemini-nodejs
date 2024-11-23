@@ -7,6 +7,7 @@ import {
   imageUpload,
 } from "../controllers/postsController.js";
 
+// Set up multer for Windows
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, 'uploads/');
@@ -31,7 +32,7 @@ const routes = (app) => {
   app.get("/posts/:id", getPostById);
 
   // Route to upload an image
-  app.post("/upload", upload.single("image"), imageUpload());
+  app.post("/upload", upload.single("image"), imageUpload);
 };
 
 export default routes;

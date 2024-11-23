@@ -1,3 +1,4 @@
+import fs from "fs";
 import { getAllPosts, createPost, getOnePost } from "../models/postsModel.js";
 
 export async function listPosts(req, res) {
@@ -6,7 +7,7 @@ export async function listPosts(req, res) {
     res.status(200).json(posts);
   } catch (error) {
     console.error(error.message);
-    res.status(404).send("Error");
+    res.status(500).send("Error");
   }
 }
 
@@ -17,18 +18,25 @@ export async function newPost(req, res) {
     res.status(200).json(newPost);
   } catch (error) {
     console.error(error.message);
-    res.status(404).send("Error");
+    res.status(500).send("Error");
   }
 }
 
 export async function imageUpload(req, res) {
-  const post = req.body;
+  const post = {
+    description: "",
+    img_url: req.file.originalname,
+    img_alt: "",
+  };
+
   try {
     const newPost = await createPost(post);
+    const image = `uploads/${newPost.insertedId}.jpg`;
+    fs.renameSync(req.file.path, image);
     res.status(200).json(newPost);
   } catch (error) {
     console.error(error.message);
-    res.status(404).send("Error");
+    res.status(500).send("Error");
   }
 }
 
@@ -39,6 +47,6 @@ export async function getPostById(req, res) {
     res.status(200).json(post);
   } catch (error) {
     console.error(error.message);
-    res.status(404).send("Error");
+    res.status(500).send("Error");
   }
 }
