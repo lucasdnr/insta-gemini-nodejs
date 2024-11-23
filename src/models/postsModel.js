@@ -1,3 +1,4 @@
+import { ObjectId } from 'mongodb';
 import connectToDatabase from "../config/dbConfig.js";
 
 // Connect to the database asynchronously
@@ -14,7 +15,7 @@ export async function getAllPosts() {
 export async function getOnePost(id) {
     const db = connection.db("insta-gemini");
     const collection = db.collection("posts");
-    const query = { _id: id };
+    const query = { _id: ObjectId.createFromHexString(id) };
     return collection.findOne(query);
 }
 
