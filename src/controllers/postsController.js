@@ -1,9 +1,9 @@
 import fs from "fs";
-import { getAllPosts, createPost, getOnePost } from "../models/postsModel.js";
+import { getAll, create, getOne, update } from "../models/postsModel.js";
 
 export async function listPosts(req, res) {
   try {
-    const posts = await getAllPosts();
+    const posts = await getAll();
     res.status(200).json(posts);
   } catch (error) {
     console.error(error.message);
@@ -14,7 +14,7 @@ export async function listPosts(req, res) {
 export async function newPost(req, res) {
   const post = req.body;
   try {
-    const newPost = await createPost(post);
+    const newPost = await create(post);
     res.status(200).json(newPost);
   } catch (error) {
     console.error(error.message);
@@ -30,7 +30,7 @@ export async function imageUpload(req, res) {
   };
 
   try {
-    const newPost = await createPost(post);
+    const newPost = await create(post);
     const image = `uploads/${newPost.insertedId}.jpg`;
     fs.renameSync(req.file.path, image);
     res.status(200).json(newPost);
@@ -43,8 +43,26 @@ export async function imageUpload(req, res) {
 export async function getPostById(req, res) {
   const id = req.params.id;
   try {
-    const post = await getOnePost(id);
+    const post = await getOne(id);
     res.status(200).json(post);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("Error");
+  }
+}
+
+export async function updatePost(req, res) {
+  const id = req.params.id;
+  const imgUrl = `http://localhost:3000/${id}.jpg`;
+  const post = {
+    description: req.body.description,
+    img_url: imgUrl,
+    img_alt: req.body.img_alt,
+  };
+
+  try {
+    const updatePost = await update(id, post);
+    res.status(200).json(updatePost);
   } catch (error) {
     console.error(error.message);
     res.status(500).send("Error");
